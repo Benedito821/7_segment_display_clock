@@ -1,0 +1,8 @@
+../Core/Src/7_segment_display.c:10:6:display_init	8	static
+../Core/Src/7_segment_display.c:28:6:display_clear	16	static
+../Core/Src/7_segment_display.c:76:6:display_clear_all	8	static
+../Core/Src/7_segment_display.c:83:6:display_Min1	16	static
+../Core/Src/7_segment_display.c:157:6:display_Min10	16	static
+../Core/Src/7_segment_display.c:233:6:display_Hrs1	16	static
+../Core/Src/7_segment_display.c:309:6:display_Hrs10	16	static
+../Core/Src/7_segment_display.c:385:6:Set_hour	16	static
