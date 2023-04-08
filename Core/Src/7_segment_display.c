@@ -1,5 +1,7 @@
 #include "7_segment_display.h"
 
+extern TIM_HandleTypeDef htim2;
+
 typedef enum{
 	Display_Min1,
 	Display_Min10,
@@ -9,20 +11,21 @@ typedef enum{
 
 void display_init(void){
 	display_clear_all();
-	HAL_GPIO_WritePin(GPIOB,Display_Hrs10_E_Pin|
-							Display_Hrs10_F_Pin,GPIO_PIN_RESET);
-
-	HAL_GPIO_WritePin(GPIOB,Display_Hrs1_G_Pin|
-							Display_Hrs1_E_Pin,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA,Display_Hrs1_C_Pin,GPIO_PIN_RESET);
-
-	HAL_GPIO_WritePin(GPIOA,Display_Min10_E_Pin|
-							Display_Min10_F_Pin,GPIO_PIN_RESET);
-
-	HAL_GPIO_WritePin(GPIOB,Display_Min1_G_Pin,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOA,Display_Min1_D_Pin|
-							Display_Min1_E_Pin,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOC,Display_Min1_F_Pin,GPIO_PIN_RESET);
+	//uncomment this to write the word "init"
+//	HAL_GPIO_WritePin(GPIOB,Display_Hrs10_E_Pin|
+//							Display_Hrs10_F_Pin,GPIO_PIN_RESET);
+//
+//	HAL_GPIO_WritePin(GPIOB,Display_Hrs1_G_Pin|
+//							Display_Hrs1_E_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(GPIOA,Display_Hrs1_C_Pin,GPIO_PIN_RESET);
+//
+//	HAL_GPIO_WritePin(GPIOA,Display_Min10_E_Pin|
+//							Display_Min10_F_Pin,GPIO_PIN_RESET);
+//
+//	HAL_GPIO_WritePin(GPIOB,Display_Min1_G_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(GPIOA,Display_Min1_D_Pin|
+//							Display_Min1_E_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(GPIOC,Display_Min1_F_Pin,GPIO_PIN_RESET);
 }
 
 void display_clear(display which_display){

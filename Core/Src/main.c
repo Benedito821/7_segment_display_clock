@@ -49,15 +49,18 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void stop_clock(void);
+uint16_t timer_cnt_diff(TIM_HandleTypeDef *htim,uint16_t cnt_val_1,uint16_t cnt_val_2);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void stop_clock(void){
-	  uint8_t pin_reading = HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_0);
-		  if(pin_reading==0)
-			  HAL_TIM_Base_Stop_IT(&htim2);
+_Bool mode = CLOCK;
+uint8_t Hrs_ = 0, Min_ = 0;
+uint16_t timer_cnt_diff(TIM_HandleTypeDef *htim,uint16_t cnt_val_1,uint16_t cnt_val_2){
+	if(cnt_val_2 > cnt_val_1)
+		return (cnt_val_2 - cnt_val_1);
+	else if (cnt_val_2 < cnt_val_1)
+		return (__HAL_TIM_GET_AUTORELOAD(htim)  - cnt_val_1 + cnt_val_2);
 }
 /* USER CODE END 0 */
 
@@ -68,7 +71,7 @@ void stop_clock(void){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	uint16_t temp,var;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -84,22 +87,49 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
+  MX_TIM1_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   display_init();
-
+  HAL_TIM_Base_Start_IT(&htim1);
+  HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  stop_clock();  // EXTI0 doesn't trigger :/
+	  if((HAL_GPIO_ReadPin(GPIOD,SW1_TRIGGER_Pin) == 0) && mode == TIMER)
+			  HAL_TIM_Base_Start_IT(&htim2);
+	  else if( (HAL_GPIO_ReadPin(GPIOD,SW1_TRIGGER_Pin) == 1) && mode == TIMER){
+		  	  HAL_TIM_Base_Stop_IT(&htim2);
+	  }
+	  if(HAL_GPIO_ReadPin(GPIOA,SW3_MODE_CLEAR_Pin) == 0){
+		  temp = __HAL_TIM_GET_COUNTER(&htim1);
+		  if(mode == TIMER ){
+			Set_hour(0,0);
+			Hrs_ = 0;
+			Min_ = 0;
+		  }
+		  while(HAL_GPIO_ReadPin(GPIOA,SW3_MODE_CLEAR_Pin) == 0 ){
+			  var = timer_cnt_diff(&htim1,temp,__HAL_TIM_GET_COUNTER(&htim1));
+			  if( var >= 800 && var <=803){
+				display_clear_all(); // in order to signalize a mode switch
+				mode = !mode;
+				if(mode == TIMER){
+					Set_hour(0,0);
+					Hrs_ = 0;
+					Min_ = 0;
+				}
+				break;
+			  }
+		 }
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

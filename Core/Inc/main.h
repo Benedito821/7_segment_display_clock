@@ -59,8 +59,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Display_Min1_F_Pin GPIO_PIN_13
 #define Display_Min1_F_GPIO_Port GPIOC
-#define SW3_STOP_Pin GPIO_PIN_0
-#define SW3_STOP_GPIO_Port GPIOD
+#define SW1_TRIGGER_Pin GPIO_PIN_0
+#define SW1_TRIGGER_GPIO_Port GPIOD
+#define LED1_LED2_Pin GPIO_PIN_1
+#define LED1_LED2_GPIO_Port GPIOD
 #define Display_Min1_C_Pin GPIO_PIN_0
 #define Display_Min1_C_GPIO_Port GPIOA
 #define Display_Min1_D_Pin GPIO_PIN_1
@@ -105,9 +107,8 @@ void Error_Handler(void);
 #define Display_Min10_F_GPIO_Port GPIOA
 #define Display_Min10_G_Pin GPIO_PIN_12
 #define Display_Min10_G_GPIO_Port GPIOA
-#define SW1_TRIGGER_Pin GPIO_PIN_15
-#define SW1_TRIGGER_GPIO_Port GPIOA
-#define SW1_TRIGGER_EXTI_IRQn EXTI15_10_IRQn
+#define SW3_MODE_CLEAR_Pin GPIO_PIN_15
+#define SW3_MODE_CLEAR_GPIO_Port GPIOA
 #define Display_Min10_A_Pin GPIO_PIN_5
 #define Display_Min10_A_GPIO_Port GPIOB
 #define Display_Min10_B_Pin GPIO_PIN_6

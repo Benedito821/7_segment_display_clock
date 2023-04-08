@@ -52,13 +52,15 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
 /* USER CODE BEGIN EV */
-
+extern _Bool mode;
+extern uint8_t Hrs_ , Min_ ;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -200,6 +202,18 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles TIM1 update interrupt.
+  */
+void TIM1_UP_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM1_UP_IRQn 0 */
+  /* USER CODE END TIM1_UP_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim1);
+  /* USER CODE BEGIN TIM1_UP_IRQn 1 */
+  /* USER CODE END TIM1_UP_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM2 global interrupt.
   */
 void TIM2_IRQHandler(void)
@@ -208,39 +222,58 @@ void TIM2_IRQHandler(void)
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
-  //set up the time
-  static uint8_t Hrs = 21, Min = 15;
-  Set_hour(Hrs,Min);
-  Min++;
-  if(Min==60 && Hrs<=24){
-	Min = 0;
-	Hrs++;
-	if(Hrs==24){
-		Hrs=0;
-		return;
-	}
-  }
+  HAL_GPIO_TogglePin(GPIOD,LED1_LED2_Pin);
+  timer_mode();
   /* USER CODE END TIM2_IRQn 1 */
 }
 
 /**
-  * @brief This function handles EXTI line[15:10] interrupts.
+  * @brief This function handles TIM3 global interrupt.
   */
-void EXTI15_10_IRQHandler(void)
+void TIM3_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
-  /* USER CODE END EXTI15_10_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(SW1_TRIGGER_Pin);
-  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
-  /* USER CODE END EXTI15_10_IRQn 1 */
+  /* USER CODE BEGIN TIM3_IRQn 0 */
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim3);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
+  clock_mode();
+  if(mode == CLOCK)
+	  HAL_GPIO_TogglePin(GPIOD,LED1_LED2_Pin);
+  /* USER CODE END TIM3_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void clock_mode(void)
 {
-	if(GPIO_Pin == SW1_TRIGGER_Pin)
-		HAL_TIM_Base_Start_IT(&htim2);
+  static uint8_t Hrs = 12, Min = 36,Sec=0;
+  if(mode == CLOCK)
+	  Set_hour(Hrs,Min);
+  Sec++;
+  if(Sec==60 && Min<60 && Hrs<24){
+	  Sec=0;
+  	  Min++;
+	  if(Min==60 && Hrs<24){
+		Min = 0;
+		Hrs++;
+		if(Hrs==24){
+			Hrs=0;
+			return;
+		}
+	  }
+  }
+}
+
+void timer_mode(void)
+{
+  Set_hour(Hrs_,Min_);
+  Min_++;
+  if(Min_==60 && Hrs_<=24){
+	Min_ = 0;
+	Hrs_++;
+	if(Hrs_==24){
+		Hrs_=0;
+		return;
+	}
+  }
 }
 /* USER CODE END 1 */
