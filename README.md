@@ -1,3 +1,5 @@
+CLOCK <-> TIMER DEVICE
+
 On  clock state: 
                 press and hold SW1 to switch to timer state. Pressing SW1 or SW3 has no effect.
 On  timer state: 
